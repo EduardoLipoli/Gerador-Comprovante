@@ -1,0 +1,77 @@
+body {
+  font-family: "Montserrat", sans-serif;
+  background-color: #f4e3ff;
+}
+
+#comprovante {
+  width: 100%;
+  width: 600px;
+  padding: 20px;
+  margin: 10px auto;
+  background-color: #fff;
+  border-radius: 12px;
+  color: #000000;
+  font-size: 14px;
+  position: relative;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  background-color: #fff;
+}
+.header-section div {
+  border: 3px solid #252d3b;
+  width: 200px;
+  height: 100px;
+  padding: 18px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.info-section {
+  margin-bottom: 10px;
+}
+.info-section div {
+  border: 3px solid #252d3b;
+  width: 100%;
+  padding: 5px;
+  border-radius: 12px;
+  background-color: #fff;
+}
+
+.info-section strong {
+  display: block;
+  margin-bottom: 5px;
+}
+.info-section p {
+  margin: 5px;
+  line-height: 1.2; /* Ajuste conforme necessário */
+}
+.table {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.table th,
+.table td {
+  background-color: transparent;
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid #c3bce3;
+}
+.totals-section {
+  text-align: right;
+}
+.btn {
+  padding: 10px;
+  background-color: #af8cff;
+  border: none;
+}
+
+.break-word {
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+}
