@@ -14,23 +14,26 @@ body {
   font-size: 14px;
   position: relative;
 }
-
 .header-section {
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
   background-color: #fff;
 }
-.header-section div {
+.order-info {
   border: 3px solid #252d3b;
-  width: 200px;
-  height: 100px;
-  padding: 18px;
+  width: 230px;
+  height: 100%;
+  padding: 5px;
   border-radius: 12px;
   display: flex;
-  align-items: center;
   flex-direction: column;
 }
+
+#order-observation {
+  word-break: break-all;
+}
+
 .info-section {
   margin-bottom: 10px;
 }

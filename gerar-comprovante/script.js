@@ -9,17 +9,24 @@ if (!formData) {
   const contentDiv = document.getElementById("comprovante");
 
   // Formatar data para DD/MM/AAAA
-  const formattedDate = new Date(formData.orderDate).toLocaleDateString(
-    "pt-BR",
-    { day: "2-digit", month: "2-digit", year: "numeric" }
-  );
+  const orderDate = new Date(formData.orderDate);
+  orderDate.setMinutes(orderDate.getMinutes() + orderDate.getTimezoneOffset());
+
+  const formattedDate = orderDate.toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
 
   contentDiv.innerHTML = `
     <div class="header-section">
         <img src="/gerar-comprovante/logo.png" height="100" />
-        <div>
-          <p><strong>Data:</strong> ${formattedDate}</p>
-          <p><strong>Pedido:</strong> ${formData.orderNumber}</p>
+        <div class="order-info">
+          <div><strong>Data:</strong> ${formattedDate}</div>
+          <div><strong>Pedido:</strong> ${formData.orderNumber}</div>
+          <div id="order-observation"><strong>Obs: </strong>${
+            formData.ordemObservation
+          }</div>
         </div>
     </div>
     
@@ -66,34 +73,52 @@ if (!formData) {
               .join("")}
         </tbody>
     </table>
-    <div class="totals-section mt-5">
-        <p><strong>Forma de Pagamento:</strong> ${
-          formData.paymentMethod === "credito"
-            ? `Crédito (${formData.installments}x)`
-            : formData.paymentMethod.charAt(0).toUpperCase() +
-              formData.paymentMethod.slice(1)
-        }</p>
-        <p><strong>Desconto:</strong> R$ ${formData.products
-          .reduce(
-            (total, product) =>
-              total +
-              product.quantity *
-                product.price *
-                ((product.discount || 0) / 100),
-            0
-          )
-          .toFixed(2)}</p>
-        <p><strong>Total da Compra:</strong> R$ ${formData.products
-          .reduce(
+<div class="totals-section mt-5">
+  <p><strong>Forma de Pagamento:</strong> ${
+    formData.paymentMethod === "credito"
+      ? `Crédito (${formData.installments}x)`
+      : formData.paymentMethod.charAt(0).toUpperCase() +
+        formData.paymentMethod.slice(1)
+  }</p>
+  <p><strong>Desconto (produtos):</strong> R$ ${formData.products
+    .reduce(
+      (total, product) =>
+        total +
+        product.quantity * product.price * ((product.discount || 0) / 100),
+      0
+    )
+    .toFixed(2)}</p>
+  
+  ${
+    formData.paymentMethod === "debito" || formData.paymentMethod === "pix"
+      ? `<p><strong>Desconto Adicional (5%):</strong> R$ ${(
+          formData.products.reduce(
             (total, product) =>
               total +
               product.quantity *
                 product.price *
                 (1 - (product.discount || 0) / 100),
             0
-          )
-          .toFixed(2)}</p>
-    </div>
+          ) * 0.05
+        ).toFixed(2)}</p>`
+      : ""
+  }
+
+  <p><strong>Total da Compra:</strong> R$ ${(
+    formData.products.reduce(
+      (total, product) =>
+        total +
+        product.quantity * product.price * (1 - (product.discount || 0) / 100),
+      0
+    ) *
+    (formData.paymentMethod === "debito" ||
+    formData.paymentMethod === "pix" ||
+    formData.paymentMethod === "dinheiro"
+      ? 0.95
+      : 1)
+  ).toFixed(2)}</p>
+</div>
+
   `;
 }
 
