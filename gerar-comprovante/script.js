@@ -18,6 +18,22 @@ if (!formData) {
     year: "numeric",
   });
 
+  // Calculando total do desconto
+  const totalDesconto = formData.products.reduce(
+    (total, product) =>
+      total +
+      product.quantity * product.price * ((product.discount || 0) / 100),
+    0
+  );
+
+  // Se houver desconto, adicionamos ao HTML
+  const descontoHTML =
+    totalDesconto > 0
+      ? `<p><strong>Desconto (produtos):</strong> R$ ${totalDesconto.toFixed(
+          2
+        )}</p>`
+      : "";
+
   contentDiv.innerHTML = `
     <div class="header-section">
         <img src="/gerar-comprovante/logo.png" height="100" />
@@ -73,52 +89,46 @@ if (!formData) {
               .join("")}
         </tbody>
     </table>
-<div class="totals-section mt-5">
-  <p><strong>Forma de Pagamento:</strong> ${
-    formData.paymentMethod === "credito"
-      ? `Crédito (${formData.installments}x)`
-      : formData.paymentMethod.charAt(0).toUpperCase() +
-        formData.paymentMethod.slice(1)
-  }</p>
-  <p><strong>Desconto (produtos):</strong> R$ ${formData.products
-    .reduce(
-      (total, product) =>
-        total +
-        product.quantity * product.price * ((product.discount || 0) / 100),
-      0
-    )
-    .toFixed(2)}</p>
-  
-  ${
-    formData.paymentMethod === "debito" || formData.paymentMethod === "pix"
-      ? `<p><strong>Desconto Adicional (5%):</strong> R$ ${(
-          formData.products.reduce(
-            (total, product) =>
-              total +
-              product.quantity *
-                product.price *
-                (1 - (product.discount || 0) / 100),
-            0
-          ) * 0.05
-        ).toFixed(2)}</p>`
-      : ""
-  }
 
-  <p><strong>Total da Compra:</strong> R$ ${(
-    formData.products.reduce(
-      (total, product) =>
-        total +
-        product.quantity * product.price * (1 - (product.discount || 0) / 100),
-      0
-    ) *
-    (formData.paymentMethod === "debito" ||
-    formData.paymentMethod === "pix" ||
-    formData.paymentMethod === "dinheiro"
-      ? 0.95
-      : 1)
-  ).toFixed(2)}</p>
-</div>
+    <div class="totals-section mt-5">
+      <p><strong>Forma de Pagamento:</strong> ${
+        formData.paymentMethod === "credito"
+          ? `Crédito (${formData.installments}x)`
+          : formData.paymentMethod.charAt(0).toUpperCase() +
+            formData.paymentMethod.slice(1)
+      }</p>
 
+      ${descontoHTML}
+      
+      ${
+        formData.paymentMethod === "debito" || formData.paymentMethod === "pix"
+          ? `<p><strong>Desconto Adicional (5%):</strong> R$ ${(
+              formData.products.reduce(
+                (total, product) =>
+                  total +
+                  product.quantity *
+                    product.price *
+                    (1 - (product.discount || 0) / 100),
+                0
+              ) * 0.05
+            ).toFixed(2)}</p>`
+          : ""
+      }
+
+      <p><strong>Total da Compra:</strong> R$ ${(
+        formData.products.reduce(
+          (total, product) =>
+            total +
+            product.quantity * product.price * (1 - (product.discount || 0) / 100),
+          0
+        ) *
+        (formData.paymentMethod === "debito" ||
+        formData.paymentMethod === "pix" ||
+        formData.paymentMethod === "dinheiro"
+          ? 0.95
+          : 1)
+      ).toFixed(2)}</p>
+    </div>
   `;
 }
 
